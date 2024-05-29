@@ -28,6 +28,11 @@ function GetNameFromId(cid)
     end
 end
 
+function GetPlayerProperties(cid, cb) -- bcs-housing
+    local result = exports.bcs_housing:GetOwnedHomes(cid)
+    return result
+end
+
 function GetPersonInformation(cid, jobtype)
     local result = MySQL.query.await('SELECT information, tags, gallery, pfp, fingerprint FROM mdt_data WHERE cid = ? and jobtype = ?', { cid,  jobtype})
     return result[1]
