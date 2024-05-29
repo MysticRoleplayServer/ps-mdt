@@ -2037,19 +2037,20 @@ function format_time(time)
 end
 
 function GetPlayerPropertiesByCitizenId(citizenid)
-    local properties = {}
-
-    local result = MySQL.Sync.fetchAll("SELECT * FROM properties WHERE owner_citizenid = @citizenid", {
-        ['@citizenid'] = citizenid
-    })
-
-    if result and #result > 0 then
-        for i = 1, #result do
-            table.insert(properties, result[i])
-        end
-    end
-
-    return properties
+	local Coords = {} -- bcs-housing
+	local Houses = {}
+	local properties = GetPlayerProperties(person.cid)
+	for k, v in pairs(properties) do
+		Coords[#Coords + 1] = v.complex == 'Individual' and v.entry or v.apartment.coords
+	end
+	for index = 1, #Coords, 1 do
+		Houses[#Houses + 1] = {
+			label = properties[index]["name"],
+			coords = tostring(Coords[index]["x"] ..
+				"," .. Coords[index]["y"] .. "," .. Coords[index]["z"]),
+		}
+	end
+	person.properties = Houses
 end
 
 function generateMessageFromResult(result)
